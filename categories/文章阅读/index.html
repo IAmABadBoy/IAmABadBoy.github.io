@@ -49,27 +49,27 @@
   <meta name="description" content="oooo的博客">
 <meta property="og:type" content="website">
 <meta property="og:title" content="oooo的博客">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;index.html">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;categories&#x2F;%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB&#x2F;index.html">
 <meta property="og:site_name" content="oooo的博客">
 <meta property="og:description" content="oooo的博客">
 <meta property="og:locale" content="zh-CN">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://yoursite.com/">
+<link rel="canonical" href="http://yoursite.com/categories/%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome: true,
+    isHome: false,
     isPost: false,
     isPage: false,
     isArchive: false
   };
 </script>
 
-  <title>oooo的博客</title>
+  <title>分类: 文章阅读 | oooo的博客</title>
   
 
 
@@ -164,116 +164,47 @@
           <div class="content">
             
 
-  <div class="posts-expand">
-        
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/02/Group-wise-Correlation-Stereo-Network/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="oooo">
-      <meta itemprop="description" content="oooo的博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="oooo的博客">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/12/02/Group-wise-Correlation-Stereo-Network/" class="post-title-link" itemprop="url">Group-wise-Correlation-Stereo-Network</a>
+  
+  <div class="post-block">
+    <div class="posts-collapse">
+      <div class="collection-title">
+        <h1 class="collection-header">文章阅读
+          <small>分类</small>
         </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2019-12-02 15:27:46 / 修改时间：17:36:22" itemprop="dateCreated datePublished" datetime="2019-12-02T15:27:46+08:00">2019-12-02</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB/" itemprop="url" rel="index">
-                    <span itemprop="name">文章阅读</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
+      </div>
 
       
-          <h2 id="文章结构"><a href="#文章结构" class="headerlink" title="文章结构"></a>文章结构</h2><pre><code>0. Abstract
-1. Introduction
-2. Related Work
-3. Group-Wise Correlation Network
-4. Experiment
-5. Conclusion</code></pre><h2 id="文章解读"><a href="#文章解读" class="headerlink" title="文章解读"></a>文章解读</h2><h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><p>&emsp;&emsp;以前的工作中构建了跨越所有disparity levels的左右特征的 cross-correlation or concatenation的cost volumes，然后用2d或3d卷积神经网络来回归视差图。本文提出了用分组的方法来构建cost volumes。沿着channel dimension 左右特征被分成小组，然后在组之间计算correlation map，得到多匹配的cost proposals，然后打包成 cost volume。Group-wise 相关提供了度量特征相似性的有效表示，并且不会像full correlation丢失太多信息。</p>
-<p>&emsp;&emsp;<a href="https://github.com/xy-guo/GwcNet" target="_blank" rel="noopener">代码链接</a></p>
-<h3 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h3><p>&emsp;&emsp;<strong>传统的双目流程通常包含4步：</strong></p>
-<ul>
-<li>matching cost computation</li>
-<li>cost aggregation</li>
-<li>disparity optimization</li>
-<li>postprocessing</li>
-</ul>
-<p>matching cost computation 是为了给左右图patches提供初始相似性度量。常见的matching cost 包括 绝对差（SAD）、平方差之和（SSD）、归一化互相关（NCC）</p>
-<p>cost aggregation 和 optimization 包括上下文匹配成本和先验知识来得到更可靠的disparity预测</p>
-<p>learning-base 的方法利用了不同的特征表示和聚类方法来计算matching costs。列举了几个网络和各自的方法。</p>
-<p><strong>他们的缺点：</strong></p>
-<blockquote>
-<p>full correlation 丢失了很多信息因为它对每个disparity level只提供了一个单通道的相关图</p>
-<p>concatenation volume 需要更多的参数从头学习相似性度量功能</p>
-<p>hand-crafts的还在用传统的匹配成本，不能优化成端到端网络</p>
-</blockquote>
-<p><strong>我们的方法：</strong></p>
-<blockquote>
-<p>提取多级一元特征来构成左右图像对的高维度特征表示  fl , fr 。然后将特征沿着channel dimension进行分组。在所有disparity levels，第 i 个左特征组将与第 i 个右特征组相关联以获得group-wise的相关图，最后将所有相关图打包成一个4D成本量。</p>
-<p>一元特征可视为groups of structed vectors，因此一个组的correlation maps 可以视为一个matching cost proposal </p>
-</blockquote>
-<p><strong>我们的主要贡献：</strong></p>
-<blockquote>
-<ul>
-<li>提出了group-wise方法来构建cost volumes，提供了更好的相似性度量</li>
-<li>改善了 the stacked 3D hourglass refinement network</li>
-<li>在3个数据集上，比以前的方法有更好的性能</li>
-<li>在限制聚合的计算成本时，性能降低小，在实时双目网络中有应用价值。</li>
-</ul>
-</blockquote>
-<h3 id="Related-Work"><a href="#Related-Work" class="headerlink" title="Related Work"></a>Related Work</h3><p>&emsp;&emsp;略</p>
-<h3 id="Group-wise-Correlation-Network"><a href="#Group-wise-Correlation-Network" class="headerlink" title="Group-wise Correlation Network"></a>Group-wise Correlation Network</h3><p>&emsp;&emsp;GwcNet是基于PSMNet，加入了group-wise correlation cost volume 和改进了 3d stacked hourglass network。</p>
-
-      
+    <div class="collection-year">
+      <h1 class="collection-header">2019</h1>
     </div>
 
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
 
+      <div class="post-meta">
+        <time itemprop="dateCreated"
+              datetime="2019-12-02T15:27:46+08:00"
+              content="2019-12-02">
+          12-02
+        </time>
+      </div>
+
+      <h2 class="post-title">
+          <a class="post-title-link" href="/2019/12/02/Group-wise-Correlation-Stereo-Network/" itemprop="url">
+            <span itemprop="name">Group-wise-Correlation-Stereo-Network</span>
+          </a>
+      </h2>
+
+    </header>
+  </article>
+
+    </div>
   </div>
+  
+  
+  
 
   
 
