@@ -169,6 +169,175 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/04/Mono-SF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="oooo">
+      <meta itemprop="description" content="oooo的博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="oooo的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/12/04/Mono-SF/" class="post-title-link" itemprop="url">Mono-SF:Multi-ViewGeometry_Meets_Single-View_Depth_for_Monocular_Scene_Flow_Estimation_of_Dynamic_Trafﬁc_Scenes</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2019-12-04 09:58:15 / 修改时间：16:29:24" itemprop="dateCreated datePublished" datetime="2019-12-04T09:58:15+08:00">2019-12-04</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB/" itemprop="url" rel="index">
+                    <span itemprop="name">文章阅读</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="文章结构"><a href="#文章结构" class="headerlink" title="文章结构"></a>文章结构</h2><blockquote>
+<ul>
+<li>Abstract</li>
+<li>Introduction</li>
+<li>Related Work</li>
+<li>Methods</li>
+<li>Experiments</li>
+<li>Conclusion</li>
+</ul>
+</blockquote>
+<h2 id="文章解读"><a href="#文章解读" class="headerlink" title="文章解读"></a>文章解读</h2><h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><p>&emsp; &emsp;现有的的3D场景流估计方法提供了场景的3D geometry和3d motion。traditionally，这些方法基于stereo images 的时间序列我们提出了novel单目3D场景流估计方法——MonoSF。它通过组合multi-view geometry and single-view depth information，共同估算场景的3D结构和运动。为了以统计方式集成单试图深度，我们提出了一个ProbDepthNet的卷积神经网络。它从整个图片来估计像素的深度分布而不是单个深度值。此外，我们还提出了一个新颖的用于回归问题的recalibration technique来确保well-calibrated distributions。</p>
+<p>calibrate 校准</p>
+<p>Keypoints：</p>
+<blockquote>
+<ul>
+<li><p>MonoSF-组合multi-view geometry and single-view depth information来估算3D结构和运动</p>
+</li>
+<li><p>ProbDepthNet卷积神经网络</p>
+</li>
+<li><p>novel recalibration technique </p>
+</li>
+</ul>
+</blockquote>
+<h3 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h3><p>&emsp;&emsp;单目系统VS双目系统：</p>
+<blockquote>
+<ul>
+<li>单目系统更便宜，避免了双目系统中的校准工作。</li>
+<li>在单目系统设置中，3D 场景流估计是一个ill-posed（不确定）问题。</li>
+<li>为了解决歧义，以前的方法假定运动对象与周围环境接触或场景的表面和运动遵循一个平滑度。但是假设可能会被违背。</li>
+<li>单目系统里有一些方法可以从单个图像中提供深度估计。我们在概率优化框架中将多视图几何和单视图深度信息结合起来，提供一致的3D场景流估计。单视图深度用于解决多视图几何的歧义。</li>
+</ul>
+</blockquote>
+<p>&emsp;&emsp;之前的方法表明，对特定交通场景的suitable表示是分解成3D planar surface elements，每个element都被视作一个rigid body（刚体）。遵循此规律，MonoSF联合考虑以下因素，共同估计每个平面的3D几何形状和每个刚体的6D运动：</p>
+<blockquote>
+<ul>
+<li>通过将参考图片扭曲成consecutive图像的多视图几何</li>
+<li>概率单视图深度估计</li>
+<li>场景模型的平滑度检验</li>
+</ul>
+</blockquote>
+<p>另外，利用instance分割来检测潜在移动对象的集合。</p>
+<h3 id="Related-Work"><a href="#Related-Work" class="headerlink" title="Related Work"></a>Related Work</h3><p>略</p>
+<h3 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h3><p>将从两方面进行介绍—-ProbDepthNet和MonoSF模型和优化框架</p>
+<h4 id="Probabilistic-Single-View-Depth-Estimation"><a href="#Probabilistic-Single-View-Depth-Estimation" class="headerlink" title="Probabilistic Single-View Depth Estimation"></a>Probabilistic Single-View Depth Estimation</h4><p>&emsp;&emsp;它的主要目的是为了提供一个像素密度概率函数。深度值被编码为它的深度值倒数形式 $d=Z^{-1}$,其中Z是摄像机坐标中3D位置的Z坐标，ProbDepthNet估计参数化为高斯混合的像素级概率密度函数$p_\mathbf{P}(d|I)$</p>
+<p><img src="/2019/12/04/Mono-SF/3.png" alt="3"></p>
+<p>其中 K 代表 the num of components，$\lambda_i$是权重，$\mu_i$代表平均值，$\sigma_i$代表第i个分量的方差。</p>
+<p><img src="/2019/12/04/Mono-SF/2.png" alt="2"></p>
+<blockquote>
+<ul>
+<li>ProbDepthNet 由两部分组成：DepthNet 和CalibNet。DepthNet是一个full卷积的ResNet-50，在相应的编码器和解码器层之间有skip connection。DepthNet的输出是高斯混和的参数，凭借在对数空间中提供方差 $s_i =\log(\sigma_i)$。</li>
+<li>其次，方差$ s_i$ 和权重$\lambda_i$ 将由CalibNet进行重新校准。 CalibNet由5个1*1的卷积层组成：没有非线性激活函数的第一层将输入按比例缩放。剩余的4层包括作为激活函数的指数线性单位。</li>
+<li>两个网络在训练数据的不同分割上进行训练，以避免DepthNet在校准分割上过度拟合。</li>
+</ul>
+</blockquote>
+<p>负的对数似然函数 loss $\mathcal{L}$在训练期间损失最小：</p>
+<p><img src="/2019/12/04/Mono-SF/4.png" alt="4"></p>
+<p>为了克服激光雷达数据在密度、视野、方面的局限性，基于双目图像的中间融合被用做真实深度的生成。</p>
+<blockquote>
+<ul>
+<li>首先，将激光点云投射到图片上并去除不一致的测量值以处理遮挡问题。</li>
+<li>其次，考虑到两个立体图像之间的光度距离，可以使用基于SGM的方法来补全稀疏深度图</li>
+</ul>
+</blockquote>
+<p>ProbDepthNet通过在训练过程中观察深度分布来学习估计像素级深度分布。 因此，深度分布捕捉了有关Kendall和Gal理论的不确定性。 无视不确定性被认为是许多视觉应用中最主要的不确定性[32]。</p>
+<h4 id="Monocular-Scene-Flow"><a href="#Monocular-Scene-Flow" class="headerlink" title="Monocular Scene Flow"></a>Monocular Scene Flow</h4><h5 id="Monocular-Scene-Flow-Model"><a href="#Monocular-Scene-Flow-Model" class="headerlink" title="Monocular Scene Flow Model"></a>Monocular Scene Flow Model</h5><p>&emsp;&emsp;主要假设是，可以通过一组 piecewise planar 平面元素来表示场景结构，一组刚体来代表运动。正式地，参考图像被划分为一组超像素，每个超像素代表一个3D平面，每个3D平面均由其法线$n_i\in \mathbf{R}^3$定义并按该平面到相机的距离的倒数缩放。并且以$n^T_iX=1$来编码平面上每个3D点X的坐标。刚体组包括背景和其他交通参与者，比如被instance segmentation检测到的人和车。即使行人在一定程度上没有进行刚体运动，也可以通过主导刚体变换来近似。每个刚体由其6D运动$T_j\in SE(3)$表示。另外，每一个超像素与一个刚体以及对应的超像素的像素$R_i$关联。</p>
+<p><img src="/2019/12/04/Mono-SF/5.png" alt="5"></p>
+<h5 id="Energy-Minimization-Problem"><a href="#Energy-Minimization-Problem" class="headerlink" title="Energy Minimization Problem"></a>Energy Minimization Problem</h5><p>&emsp;&emsp;Mono-SF的主要思想是场景几何形状和运动在扭曲连续图像$I_1$ 中的参考图像$I_0$ 方面应保持一致，并与ProbDepthNet提供的深度分布$p(d|I_0)$和$p(d|I_1)$保持一致.形式上，作为能量最小问题，Mono-SF 共同优化了每个刚体的6D运动和每个平面$n_i$ 的3D法线。能量项E由每个像素$p_0$的一元数据项$\Phi(p_0,n_i,T_j)$和相邻图片$k,l\in \mathbf{N}$中的每两个平面$n_k$和$n_l$组成的成对平滑度项$\Psi(n_i,n_j)$。</p>
+<p><img src="/2019/12/04/Mono-SF/6.png" alt="6"></p>
+<p>$\Phi(p_0,n_i,T_j)$由两部分组成。</p>
+<p><img src="/2019/12/04/Mono-SF/7.png" alt="7"></p>
+<blockquote>
+<ul>
+<li>$\Phi^{pho}(p_0,n_i,T_j)$最小化像素$p_0$和其在连续图像中的投影位置的基于外观的测光距离</li>
+<li>$\Phi^{svd}_t(p_0,n_i,T_j)$偏爱在t=0和1时的ProbDepthNet的估计深度概率一致的3D位置。</li>
+</ul>
+</blockquote>
+<p><img src="/2019/12/04/Mono-SF/9.png" alt="9"></p>
+<p>Census descriptors？？？   decomposition of  。。。的分解</p>
+<p><img src="/2019/12/04/Mono-SF/image-20191204160731631.png" alt="image-20191204160731631"></p>
+<p><img src="/2019/12/04/Mono-SF/image-20191204161001626.png" alt="image-20191204161001626"></p>
+<blockquote>
+<p>场景模型先验以成对平滑度的形式表示。</p>
+<p>$\Psi^d(n_k,n_l)$表示深度上的平滑</p>
+<p>$\Psi^{ori}(n_k,n_l)$表示方向上的平滑</p>
+</blockquote>
+<p><img src="/2019/12/04/Mono-SF/image-20191204161355893.png" alt="image-20191204161355893"></p>
+<blockquote>
+<p>两个平滑度项都被τ1或τ2截断，以考虑深度或方向的不连续性，例如不同对象之间的不连续性。 超参数Θ和τ根据刚体类型，背景或对象来不同地定义，并且对于属于不同刚体的相邻平面也不同地定义。 为便于阅读，这些关系在前面的公式中被忽略。</p>
+</blockquote>
+<p><img src="/2019/12/04/Mono-SF/image-20191204161803456.png" alt="image-20191204161803456"></p>
+<blockquote>
+<p>优化问题需要把所有变量进行合适的初始化。这里应用的关键思想是集成单视图深度信息以提供度量标准。我们将此思想另外应用于运动物体的比例感知姿势估计。首先，通过稀疏流对应关系（pi 0，pi 1），使用简单的投票方案，将由Mask R-CNN 检测到的图像I0和I1中的对象实例配对。每个对象实例以及背景都会构建一个刚体。其次，通过将上式最小化，将每个刚体的6D运动Tj∈SE（3）与一组3D点Xi∈X（对应于对应实例蒙版中的每个流对应关系一个）一起优化。</p>
+</blockquote>
+<p><img src="/2019/12/04/Mono-SF/image-20191204162047231.png" alt="image-20191204162047231"></p>
+<p>analogously  近似地</p>
+<p>随后，将这组3D平面初始化。 首先，基于适合单眼情况的半全局匹配来计算密集深度图。 再次，深度估计值由ProbDepthNet估计值附加评估。 其次，使用[68]中的方法初始化包括其3D法线ni的超像素。 平面的像素被强制具有相同的实例，从而获得与刚体的唯一关联。</p>
+<h3 id="Experiment"><a href="#Experiment" class="headerlink" title="Experiment"></a>Experiment</h3><p><img src="/2019/12/04/Mono-SF/image-20191204162227596.png" alt="image-20191204162227596"></p>
+<p><img src="/2019/12/04/Mono-SF/image-20191204162235349.png" alt="image-20191204162235349"></p>
+<p><img src="/2019/12/04/Mono-SF/mage-20191204162254493.png" alt="image-20191204162254493"></p>
+<p><img src="/2019/12/04/Mono-SF/image-20191204162305203.png" alt="image-20191204162305203"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/03/Multi-View-Stereo-by-Temporal-Nonparametric-Fusio/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -565,7 +734,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">3</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
